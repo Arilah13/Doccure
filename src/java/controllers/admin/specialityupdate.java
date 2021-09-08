@@ -1,0 +1,137 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controllers.admin;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Admin;
+import models.DBCon;
+import models.GS;
+
+/**
+ *
+ * @author rilah
+ */
+public class specialityupdate extends HttpServlet {
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+        DBCon con = new DBCon();
+        GS a = new GS();
+        Admin u = new Admin();
+        
+        String name = request.getParameter("change");
+        
+        
+        
+        
+        
+        if(name.equals("save"))
+        {   String special = request.getParameter("special");
+            int b = u.addspeciality(special);
+            if(b > 0)
+            {
+                HttpSession session = request.getSession();
+                session.setAttribute("add", "success");
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+            else
+            {
+                HttpSession session = request.getSession();
+                session.setAttribute("add", "fail");
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+        }
+        else if(name.equals("delete"))
+        {
+            int sid1 = Integer.parseInt(request.getParameter("sid1"));
+            int b = u.deletespeciality(sid1);
+            if(b > 0)
+            {
+                HttpSession session = request.getSession();
+            session.setAttribute("cancel", "success");
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+            else
+            {
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+        }
+        else if(name.equals("update"))
+        {
+            int sid = Integer.parseInt(request.getParameter("sid"));
+            String special1 = request.getParameter("speciality");
+            int b = u.updatepeciality(sid, special1);
+            if(b > 0)
+            {
+                HttpSession session = request.getSession();
+            session.setAttribute("update", "success");
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+            else
+            {
+                HttpSession session = request.getSession();
+            session.setAttribute("update", "fail");
+                request.getRequestDispatcher("adminspecialities").forward(request, response);
+            }
+        }
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}
